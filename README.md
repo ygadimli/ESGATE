@@ -1,2 +1,2 @@
 # ESGATE
-Yunis Qədimli / ESGATE SOURCE CODES 
+Yunis Qədimli / ESGATE SOURCE CODE 
