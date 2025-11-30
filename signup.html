@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qeydiyyat - ESGATE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .auth-bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        
+        .auth-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+        }
+        
+        .auth-orb-1 {
+            width: 500px;
+            height: 500px;
+            background: #10b981;
+            top: -200px;
+            right: -100px;
+            opacity: 0.15;
+        }
+        
+        .auth-orb-2 {
+            width: 400px;
+            height: 400px;
+            background: #6366f1;
+            bottom: -100px;
+            left: -100px;
+            opacity: 0.15;
+        }
+        
+        .auth-container {
+            width: 100%;
+            max-width: 520px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .auth-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .auth-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .auth-logo-icon {
+            font-size: 2.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .auth-logo-text {
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+        }
+        
+        .auth-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .auth-subtitle {
+            color: var(--text-secondary);
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px var(--accent-green-glow);
+        }
+        
+        .form-group input::placeholder {
+            color: var(--text-muted);
+        }
+        
+        .form-group select {
+            cursor: pointer;
+        }
+        
+        .role-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .role-option {
+            position: relative;
+        }
+        
+        .role-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .role-option label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 12px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        
+        .role-option label:hover {
+            border-color: var(--border-hover);
+            background: var(--bg-tertiary);
+        }
+        
+        .role-option input:checked + label {
+            border-color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        
+        .role-icon {
+            font-size: 2rem;
+        }
+        
+        .role-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0 !important;
+        }
+        
+        .role-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .category-group {
+            display: none;
+        }
+        
+        .category-group.show {
+            display: block;
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #10b981;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .auth-btn {
+            width: 100%;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 32px 0;
+        }
+        
+        .auth-divider-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+        }
+        
+        .auth-divider-text {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .auth-link {
+            text-align: center;
+        }
+        
+        .auth-link p {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        
+        .auth-link a {
+            display: block;
+            padding: 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .auth-link a:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-hover);
+        }
+        
+        .back-home {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+        
+        .back-home:hover {
+            color: var(--text-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-bg">
+            <div class="auth-orb auth-orb-1"></div>
+            <div class="auth-orb auth-orb-2"></div>
+        </div>
+        
+        <a href="/login" class="back-home">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Giriş
+        </a>
+        
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <div class="auth-logo">
+                        <span class="auth-logo-icon">◈</span>
+                        <span class="auth-logo-text">ESGATE</span>
+                    </div>
+                    <h1 class="auth-title">Hesab Yaradın</h1>
+                    <p class="auth-subtitle">ESG səyahətinizə başlayın</p>
+                </div>
+                
+                <form id="signupForm" class="auth-form">
+                    <div class="form-group">
+                        <label>Hesab Növü Seçin</label>
+                        <div class="role-selector">
+                            <div class="role-option">
+                                <input type="radio" name="role" id="role-enterprise" value="enterprise" checked>
+                                <label for="role-enterprise">
+                                    <span class="role-icon">🏢</span>
+                                    <span class="role-name">Şirkət</span>
+                                    <span class="role-desc">ESG skorunuzu ölçün</span>
+                                </label>
+                            </div>
+                            <div class="role-option">
+                                <input type="radio" name="role" id="role-investor" value="investor">
+                                <label for="role-investor">
+                                    <span class="role-icon">📈</span>
+                                    <span class="role-name">İnvestor</span>
+                                    <span class="role-desc">Şirkətləri analiz edin</span>
+                                </label>
+                            </div>
+                            <div class="role-option">
+                                <input type="radio" name="role" id="role-kids" value="kids">
+                                <label for="role-kids">
+                                    <span class="role-icon">🎓</span>
+                                    <span class="role-name">Uşaq</span>
+                                    <span class="role-desc">Maliyyə öyrən</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="username">İstifadəçi adı</label>
+                        <input type="text" id="username" name="username" placeholder="İstifadəçi adı seçin" required>
+                    </div>
+                    
+                    <div class="form-group category-group" id="categoryGroup">
+                        <label for="category">Sektor</label>
+                        <select id="category" name="category">
+                            <option value="">Sektor seçin...</option>
+                            <option value="Enerji">Enerji</option>
+                            <option value="Tikinti">Tikinti</option>
+                            <option value="Kənd təsərrüfatı">Kənd təsərrüfatı</option>
+                            <option value="Tekstil">Tekstil</option>
+                            <option value="İT/Texnologiya">İT/Texnologiya</option>
+                            <option value="İstehsalat">İstehsalat</option>
+                            <option value="Maliyyə">Maliyyə</option>
+                            <option value="Nəqliyyat">Nəqliyyat</option>
+                            <option value="Digər">Digər</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Şifrə</label>
+                        <input type="password" id="password" name="password" placeholder="Şifrə yaradın (min. 4 simvol)" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirmPassword">Şifrəni Təsdiqlə</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Şifrəni təkrar daxil edin" required>
+                    </div>
+                    
+                    <div id="errorMessage" class="error-message"></div>
+                    <div id="successMessage" class="success-message"></div>
+                    
+                    <button type="submit" class="btn btn-primary auth-btn">
+                        <span>Qeydiyyatdan Keç</span>
+                        <div class="btn-loader"></div>
+                    </button>
+                </form>
+                
+                <div class="auth-divider">
+                    <div class="auth-divider-line"></div>
+                    <span class="auth-divider-text">və ya</span>
+                    <div class="auth-divider-line"></div>
+                </div>
+                
+                <div class="auth-link">
+                    <p>Artıq hesabınız var?</p>
+                    <a href="/login">Daxil Olun</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Show/hide category based on role
+        const roleInputs = document.querySelectorAll('input[name="role"]');
+        const categoryGroup = document.getElementById('categoryGroup');
+        
+        function updateCategoryVisibility() {
+            const selectedRole = document.querySelector('input[name="role"]:checked').value;
+            if (selectedRole === 'enterprise') {
+                categoryGroup.classList.add('show');
+            } else {
+                categoryGroup.classList.remove('show');
+            }
+        }
+        
+        roleInputs.forEach(input => {
+            input.addEventListener('change', updateCategoryVisibility);
+        });
+        
+        // Check for role in URL parameter and pre-select
+        const urlParams = new URLSearchParams(window.location.search);
+        const roleParam = urlParams.get('role');
+        if (roleParam) {
+            const roleInput = document.getElementById('role-' + roleParam);
+            if (roleInput) {
+                roleInput.checked = true;
+            }
+        }
+        
+        updateCategoryVisibility(); // Initial check
+        
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = this.querySelector('button[type="submit"]');
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            btn.classList.add('loading');
+            errorDiv.classList.remove('show');
+            successDiv.classList.remove('show');
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                errorDiv.textContent = 'Şifrələr uyğun gəlmir';
+                errorDiv.classList.add('show');
+                btn.classList.remove('loading');
+                return;
+            }
+            
+            if (password.length < 4) {
+                errorDiv.textContent = 'Şifrə ən azı 4 simvol olmalıdır';
+                errorDiv.classList.add('show');
+                btn.classList.remove('loading');
+                return;
+            }
+            
+            const data = {
+                username: document.getElementById('username').value,
+                password: password,
+                role: document.querySelector('input[name="role"]:checked').value,
+                category: document.getElementById('category').value
+            };
+            
+            try {
+                const response = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(result.message || 'Qeydiyyat uğursuz oldu');
+                }
+                
+                successDiv.textContent = 'Qeydiyyat uğurlu oldu! Ana səhifəyə yönləndirilirsiniz...';
+                successDiv.classList.add('show');
+                
+                // Auto-login after registration
+                const loginResponse = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: data.username,
+                        password: data.password,
+                        remember: true
+                    })
+                });
+                
+                if (loginResponse.ok) {
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1500);
+                } else {
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                }
+                
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                errorDiv.classList.add('show');
+            } finally {
+                btn.classList.remove('loading');
+            }
+        });
+    </script>
+</body>
+</html>
+
