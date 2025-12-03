@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESGATE - Azərbaycanın ESG Platforması</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/home" class="logo">
+                <span class="logo-icon">◈</span>
+                <span class="logo-text">ESGATE</span>
+            </a>
+            <div class="nav-links">
+                {% if user and user.logged_in %}
+                    <span class="nav-user" style="display: inline-flex; align-items: center; white-space: nowrap;">👤 {{ user.username }}</span>
+                    {% if user.role == 'enterprise' %}
+                        <a href="/company" class="nav-link">Panelim</a>
+                    {% elif user.role == 'investor' %}
+                        <a href="/investor" class="nav-link">Panelim</a>
+                    {% elif user.role == 'kids' %}
+                        <a href="/kids" class="nav-link">Panelim</a>
+                    {% endif %}
+                    <button onclick="logout()" class="btn btn-secondary" style="padding: 10px 20px; font-size: 0.9rem; white-space: nowrap;">Çıxış</button>
+                {% else %}
+                    <a href="/login" class="nav-link">Daxil Ol</a>
+                    <a href="/signup" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem;">Qeydiyyat</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    <script>
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = '/login';
+            } catch (error) {
+                window.location.href = '/login';
+            }
+        }
+    </script>
+
+    <main class="hero">
+        <div class="hero-bg">
+            <div class="grid-pattern"></div>
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+            <div class="gradient-orb orb-3"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="badge-dot"></span>
+                Azərbaycanda ilk ESG AI Platforması
+            </div>
+            
+            <h1 class="hero-title">
+                <span class="title-line">Gələcəyə</span>
+                <span class="title-line gradient-text">Hazır Olun</span>
+            </h1>
+            
+            <p class="hero-description">
+                Süni intellekt vasitəsilə kiçik və orta biznesləri Avropa requlasiyalarına hazırlayırıq. 
+                ESG transformasiyası, ROI optimallaşdırma və gələcək nəsil üçün maliyyə savadlılığı.
+            </p>
+            
+            <div class="hero-cta">
+                {% if user and user.logged_in %}
+                    {% if user.role == 'enterprise' %}
+                        <a href="/company" class="btn btn-primary">
+                            <span>Şirkət Panelinə Keçin</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    {% elif user.role == 'investor' %}
+                        <a href="/investor" class="btn btn-primary">
+                            <span>İnvestor Panelinə Keçin</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    {% elif user.role == 'kids' %}
+                        <a href="/kids" class="btn btn-primary">
+                            <span>Uşaq Panelinə Keçin</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <a href="/signup" class="btn btn-primary">
+                        <span>Hesab Yaradın</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="/login" class="btn btn-secondary">Daxil Olun</a>
+                {% endif %}
+            </div>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-value">150+</span>
+                    <span class="stat-label">Şirkət</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">€2.5M</span>
+                    <span class="stat-label">İnvestisiya</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-value">89%</span>
+                    <span class="stat-label">EU Uyğunluq</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Platformamızın Xüsusiyyətləri</h2>
+            
+            <div class="features-grid">
+                <a href="/company" class="feature-card">
+                    <div class="feature-icon" style="--accent: #10b981;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3>Şirkət Platforması</h3>
+                    <p>ESG skorunuzu ölçün, ROI-ni optimallaşdırın və AI roadmap-lar əldə edin.</p>
+                    <span class="feature-link">Keçid et →</span>
+                </a>
+                
+                <a href="/investor" class="feature-card">
+                    <div class="feature-icon" style="--accent: #6366f1;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <h3>İnvestor Platforması</h3>
+                    <p>Aktual şirkətləri müqayisə edin, gələcək proqnozları analiz edin.</p>
+                    <span class="feature-link">Keçid et →</span>
+                </a>
+                
+                <a href="/kids" class="feature-card">
+                    <div class="feature-icon" style="--accent: #f59e0b;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M14.828 14.828a4 4 0 1 0-5.656-5.656 4 4 0 0 0 5.656 5.656z"/>
+                            <path d="M17.657 17.657A8 8 0 1 0 6.343 6.343"/>
+                            <path d="M21 12h-1M12 21v-1M12 4V3M4 12H3"/>
+                        </svg>
+                    </div>
+                    <h3>Uşaq Platforması</h3>
+                    <p>Maliyyə savadlılığı, xərc izləmə və AI məsləhətçi ilə öyrənmə.</p>
+                    <span class="feature-link">Keçid et →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="eu-section">
+        <div class="container">
+            <div class="eu-content">
+                <div class="eu-text">
+                    <span class="eu-badge">EU Requlasiyaları</span>
+                    <h2>Avropa Standartlarına Hazırlıq</h2>
+                    <p>
+                        CSRD, EU Taxonomy və SFDR kimi Avropa requlasiyalarına uyğunlaşmaq artıq zərurətdir. 
+                        Platformamız sizə bu prosesi sadələşdirir və AI gücü ilə transformasiyanızı sürətləndirir.
+                    </p>
+                    <ul class="eu-list">
+                        <li>
+                            <span class="check-icon">✓</span>
+                            Corporate Sustainability Reporting Directive (CSRD)
+                        </li>
+                        <li>
+                            <span class="check-icon">✓</span>
+                            EU Taxonomy for Sustainable Activities
+                        </li>
+                        <li>
+                            <span class="check-icon">✓</span>
+                            Sustainable Finance Disclosure Regulation (SFDR)
+                        </li>
+                    </ul>
+                </div>
+                <div class="eu-visual">
+                    <div class="eu-card">
+                        <div class="eu-card-header">
+                            <span class="eu-flag">🇪🇺</span>
+                            <span>EU Uyğunluq Skoru</span>
+                        </div>
+                        <div class="eu-score">
+                            <svg class="score-ring" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#1e293b" stroke-width="8"/>
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="url(#gradient)" stroke-width="8" 
+                                        stroke-dasharray="283" stroke-dashoffset="40" stroke-linecap="round"
+                                        transform="rotate(-90 50 50)"/>
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#10b981"/>
+                                        <stop offset="100%" stop-color="#6366f1"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <span class="score-value">86%</span>
+                        </div>
+                        <p class="eu-card-text">Orta müştəri uyğunluq nisbəti</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">◈</span>
+                    <span class="logo-text">ESGATE</span>
+                </div>
+                <p>Azərbaycanda ESG transformasiyasının lideri</p>
+                <p class="footer-copy">© 2025 ESGATE. Bütün hüquqlar qorunur.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+
+
