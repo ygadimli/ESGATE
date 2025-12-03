@@ -1,2 +1,2 @@
 # ESGATE
-Yunis Qədimli / ESGATE SOURCE CODE 
+AZ - Yunis Qədimli Esgate mənbə kodları. 
